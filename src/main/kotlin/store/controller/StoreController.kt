@@ -1,8 +1,11 @@
 package store.controller
 
 import store.domain.InputValidator
+import store.domain.InventoryService
 import store.domain.StoreService
 import store.model.NumberBasket
+import store.model.Products
+import store.model.Promotions
 import store.resources.Messages.*
 import store.view.InputView
 import store.view.OutputView
@@ -11,14 +14,14 @@ class StoreController(
     private val inputView: InputView,
     private val outputView: OutputView,
     private val validator: InputValidator,
+    inventoryService: InventoryService,
     private val storeService: StoreService
 ) {
-    fun orderProducts() {
-        val numberBasket = generateNumberBasket()
-        outputView.printMessage(SUM_START_HEADER.message())
-        outputView.printBlankLine()
+    private val products = inventoryService.loadProducts("src/main/resources/products.md")
+    private val promotions = inventoryService.loadPromotions("src/main/resources/promotions.md")
 
-        announceSumNumbers(numberBasket)
+    fun orderProducts() {
+
     }
 
     private fun generateNumberBasket(): NumberBasket {
@@ -52,8 +55,9 @@ class StoreController(
             val inputView = InputView()
             val outputView = OutputView()
             val inputValidator = InputValidator()
+            val inventoryService = InventoryService()
             val storeService = StoreService()
-            return StoreController(inputView, outputView, inputValidator, storeService)
+            return StoreController(inputView, outputView, inputValidator, inventoryService, storeService)
         }
     }
 }
