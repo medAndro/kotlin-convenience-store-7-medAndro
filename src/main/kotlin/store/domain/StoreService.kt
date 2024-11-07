@@ -12,7 +12,7 @@ class StoreService(
     fun writeReceipt(buyProductName: String, buyQuantity:Int) {
         val product = productRepo.getProducts()[buyProductName]!!
         //isOverflowPromoDiscount(product, buyProductName, buyQuantity)
-
+        var getFree = 0
         val promotionName = product.getPromotionName()
         if (promotionName.isNullOrBlank()) {
             return
@@ -21,6 +21,18 @@ class StoreService(
         val get = productRepo.getGetByPromoName(promotionName)
         if (buy != null && get != null) {
             val promoUnit = buy + get
+            //추가여부 입력 기능
+            val remain = buyQuantity % promoUnit
+            val boughtUnit = buyQuantity - remain
+
+            if (remain == get && ((buyQuantity + get) <= product.getPromoQuantity())) {
+                val addPromoInfoMessage = Messages.INPUT_ADD_PROMOTION.ynMessage(buyProductName, get)
+                if(inputView.readValidYN(addPromoInfoMessage)){
+                    getFree += get
+                }
+            }
+
+            //재고부족 확인기능
             if (product.getPromoQuantity() in 1..<buyQuantity) {
                 val canNotPromoAmount = buyQuantity - ((product.getPromoQuantity() / promoUnit) * promoUnit)
                 val infoMessage = Messages.INPUT_NOT_DISCOUNT.ynMessage(buyProductName, canNotPromoAmount)
@@ -33,8 +45,8 @@ class StoreService(
                 }
 
             }
-            val unitCount = (product.getPromoQuantity() / promoUnit)
-            productRepo.addReceipt(product, buyQuantity, get * unitCount)
+            val unitCount = ((buyQuantity + getFree) / promoUnit)
+            productRepo.addReceipt(product, buyQuantity + getFree, get * unitCount)
         }
 //        if (product.getPromoQuantity() > quantity) {
 //            checkPromotion(
