@@ -3,9 +3,9 @@ package store.model
 import java.time.LocalDateTime
 
 class Promotions(
-    val name: String,
-    val buy: Int,
-    val get: Int,
-    val startDate: LocalDateTime,
-    val endDate: LocalDateTime
+    private val name: String,
+    private val buy: Int,
+    private val get: Int,
+    private val startDate: LocalDateTime,
+    private val endDate: LocalDateTime
 )

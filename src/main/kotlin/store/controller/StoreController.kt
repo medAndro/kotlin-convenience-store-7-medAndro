@@ -16,7 +16,7 @@ class StoreController(
     inventoryService: InventoryService,
     private val storeService: StoreService
 ) {
-    private val products = inventoryService.loadProducts(AppConfig.PRODUCTS_FILE.value)
+    private val products = inventoryService.loadMergedProducts(AppConfig.PRODUCTS_FILE.value)
     private val promotions = inventoryService.loadPromotions(AppConfig.PROMOTIONS_FILE.value)
 
     fun orderProducts() {
@@ -29,23 +29,6 @@ class StoreController(
             outputView.printProduct(it.toDto())
         }
         outputView.printBlankLine()
-    }
-
-    private fun readNumberWithRetry(infoMessage: String): Int {
-        while (true) {
-            try {
-                outputView.printMessage(infoMessage)
-                return validator.validateInteger(inputView.readLine())
-            } catch (e: IllegalArgumentException) {
-                outputView.printMessage(e.message ?: INVALID_ERROR.errorMessage())
-            }
-        }
-    }
-
-    private fun announceSumNumbers(numberBasket: NumberBasket) {
-        val expression = storeService.getExpression(numberBasket)
-        val sumValue = storeService.plusTwoNumber(numberBasket)
-        outputView.printMessage(SUM_RESULT.formattedMessage(expression, sumValue))
     }
 
     companion object {

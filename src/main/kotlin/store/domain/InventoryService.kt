@@ -6,16 +6,35 @@ import java.io.File
 import java.time.LocalDate
 
 class InventoryService {
-    fun loadProducts(filePath: String): List<Products> =
+
+    fun loadMergedProducts(filePath: String): List<Products> {
+        return mergeProducts(loadProducts(filePath))
+    }
+
+    private fun loadProducts(filePath: String): List<Products> =
         readCsvLines(filePath) { line ->
             val (name, price, quantity, promotion) = line.split(",")
             Products(
                 name = name,
                 price = price.toInt(),
-                quantity = quantity.toInt(),
+                promoQuantity = if (promotion != "null") quantity.toInt() else 0,
+                quantity = if (promotion == "null") quantity.toInt() else 0,
                 promotion = promotion.takeUnless { it == "null" }
             )
         }
+
+    private fun mergeProducts(products: List<Products>): List<Products> =
+        products.groupBy { it.getName() }.map { (name, groupedProducts) ->
+            val first = groupedProducts.first()
+            Products(
+                name = name,
+                price = first.getPrice(),
+                promoQuantity = groupedProducts.sumOf { it.getPromoQuantity() },
+                quantity = groupedProducts.sumOf { it.getQuantity() },
+                promotion = groupedProducts.firstNotNullOfOrNull { it.getPromotion() }
+            )
+        }
+
 
     fun loadPromotions(filePath: String): List<Promotions> =
         readCsvLines(filePath) { line ->
