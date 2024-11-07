@@ -7,8 +7,9 @@ import java.time.LocalDate
 
 class InventoryService {
 
-    fun loadMergedProducts(filePath: String): List<Product> {
-        return mergeProducts(loadProducts(filePath))
+    fun loadMergedProducts(filePath: String): LinkedHashMap<String, Product> {
+        val products = mergeProducts(loadProducts(filePath))
+        return linkedMapOf(*products.map { it.getName() to it}.toTypedArray())
     }
 
     private fun loadProducts(filePath: String): List<Product> =
@@ -36,8 +37,13 @@ class InventoryService {
         }
 
 
-    fun loadPromotions(filePath: String): List<Promotion> =
-        readCsvLines(filePath) { line ->
+    fun loadPromotions(filePath: String): LinkedHashMap<String, Promotion> {
+        val promotions = readPromotionsFromFile(filePath)
+        return linkedMapOf(*promotions.map { it.getName() to it}.toTypedArray())
+    }
+
+    private fun readPromotionsFromFile(filePath: String): List<Promotion> {
+        return readCsvLines(filePath) { line ->
             val (name, buy, get, startDate, endDate) = line.split(",")
             Promotion(
                 name = name,
@@ -47,6 +53,8 @@ class InventoryService {
                 endDate = LocalDate.parse(endDate).atStartOfDay()
             )
         }
+    }
+
 
     private fun <T> readCsvLines(filePath: String, mapper: (String) -> T): List<T> =
         File(filePath).readLines().drop(1).map(mapper)

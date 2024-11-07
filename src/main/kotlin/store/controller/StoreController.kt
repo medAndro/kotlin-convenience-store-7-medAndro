@@ -21,15 +21,22 @@ class StoreController(
 
     fun orderProducts() {
         showStock()
-        val map = inputView.readValidItem()
+        val boughtProductMap = inputView.readValidItem()
+        takeOutStock(boughtProductMap)
     }
 
     private fun showStock() {
         outputView.printMessage(WELCOME_ANNOUNCE.message())
         productRepository.getProducts().forEach {
-            outputView.printProduct(it.toDto())
+            outputView.printProduct(it.value.toDto())
         }
         outputView.printBlankLine()
+    }
+
+    private fun takeOutStock(boughtProductMap: Map<String, Int>) {
+        boughtProductMap.forEach { (key, value) ->
+
+        }
     }
 
 

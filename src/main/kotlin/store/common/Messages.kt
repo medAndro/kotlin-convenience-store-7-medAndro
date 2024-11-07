@@ -10,15 +10,15 @@ enum class Messages(private val message: String) {
     INPUT_PRODUCT_NAME_QUANTITY("구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])"),
 
 
-    LEFT_VALUE_INPUT("좌변의 값을 입력하세요"),
-    RIGHT_VALUE_INPUT("우변의 값을 입력하세요"),
-    SUM_RESULT(
-        """
-        덧셈 결과
-        ---
-        %s = %s
-        """.trimIndent()
-    ),
+//    LEFT_VALUE_INPUT("좌변의 값을 입력하세요"),
+//    RIGHT_VALUE_INPUT("우변의 값을 입력하세요"),
+//    SUM_RESULT(
+//        """
+//        덧셈 결과
+//        ---
+//        %s = %s
+//        """.trimIndent()
+//    ),
 
     ERROR("[ERROR] %s"),
     INPUT_ERROR("[ERROR] %s 다시 입력해 주세요."),
