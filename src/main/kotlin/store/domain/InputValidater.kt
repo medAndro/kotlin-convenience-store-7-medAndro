@@ -55,6 +55,6 @@ class InputValidater(
         if (input.uppercase() == "N") {
             return false
         }
-        return false
+        throw IllegalArgumentException(INVALID_INPUT_ERROR.inputErrorMessage())
     }
 }

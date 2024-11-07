@@ -10,6 +10,11 @@ enum class Messages(private val message: String) {
     INPUT_PRODUCT_NAME_QUANTITY("구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])"),
 
 
+    YN("%s (Y/N)"),
+    INPUT_NOT_DISCOUNT("현재 %s %d개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까?"),
+
+
+
 //    LEFT_VALUE_INPUT("좌변의 값을 입력하세요"),
 //    RIGHT_VALUE_INPUT("우변의 값을 입력하세요"),
 //    SUM_RESULT(
@@ -31,6 +36,11 @@ enum class Messages(private val message: String) {
 
     fun message(): String = message
     fun errorMessage(): String = ERROR.formattedMessage(message)
+
     fun inputErrorMessage(): String = INPUT_ERROR.formattedMessage(message)
     fun formattedMessage(vararg args: Any): String = String.format(message, *args)
+    fun ynMessage(vararg args: Any): String {
+        val ynText = YN.formattedMessage(message)
+        return String.format(ynText, *args)
+    }
 }

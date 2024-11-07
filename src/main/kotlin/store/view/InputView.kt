@@ -14,6 +14,7 @@ class InputView(
         while (true) {
             try {
                 val input = validator(readLine())
+                outputView.printBlankLine()
                 return input
             } catch (e: IllegalArgumentException) {
                 outputView.printMessage(e.message ?: INVALID_ERROR.errorMessage())
@@ -28,12 +29,11 @@ class InputView(
         }
     }
 
-    fun readValidYN(): Boolean {
-        outputView.printMessage(Messages.INPUT_PRODUCT_NAME_QUANTITY.message())
+    fun readValidYN(infoMessage: String): Boolean {
+        outputView.printMessage(infoMessage)
         return readUntilValidInput() { input ->
             inputValidater.validateYN(input)
         }
-
     }
 
 

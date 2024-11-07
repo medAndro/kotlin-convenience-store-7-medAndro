@@ -10,4 +10,10 @@ class Promotion(
     private val endDate: LocalDateTime
 ){
     fun getName() = name
+    fun getBuy() = buy
+    fun getGet() = get
+    fun getPromoUnit() = buy + get
+    fun getStartDate() = startDate
+    fun getEndDate() = endDate
+
 }

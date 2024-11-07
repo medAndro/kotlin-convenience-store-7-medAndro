@@ -21,5 +21,5 @@ class Product(
     fun getPrice() = price
     fun getPromoQuantity() = promoQuantity
     fun getQuantity() = quantity
-    fun getPromotion() = promotion
+    fun getPromotionName() = promotion
 }

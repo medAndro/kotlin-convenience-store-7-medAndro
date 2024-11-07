@@ -35,7 +35,7 @@ class StoreController(
 
     private fun takeOutStock(boughtProductMap: Map<String, Int>) {
         boughtProductMap.forEach { (key, value) ->
-
+            storeService.writeReceipt(key, value)
         }
     }
 
@@ -47,9 +47,9 @@ class StoreController(
             private val outputView = OutputView()
             private val inventoryService = InventoryService()
             private val productRepository = initializeProductRepository(inventoryService)
-            private val storeService = StoreService()
             private val inputValidater = InputValidater(productRepository)
             private val inputView = InputView(outputView, inputValidater)
+            private val storeService = StoreService(inputView, productRepository)
 
             fun build() = StoreController(
                 inputView,

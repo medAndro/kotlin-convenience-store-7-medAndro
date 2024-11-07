@@ -32,7 +32,7 @@ class InventoryService {
                 price = first.getPrice(),
                 promoQuantity = groupedProducts.sumOf { it.getPromoQuantity() },
                 quantity = groupedProducts.sumOf { it.getQuantity() },
-                promotion = groupedProducts.firstNotNullOfOrNull { it.getPromotion() }
+                promotion = groupedProducts.firstNotNullOfOrNull { it.getPromotionName() }
             )
         }
 
