@@ -1,6 +1,6 @@
 package store.domain
 
-import store.resources.Messages.*
+import store.common.Messages.*
 
 class InputValidator {
     fun validateInteger(input: String): Int {

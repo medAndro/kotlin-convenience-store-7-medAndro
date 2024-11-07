@@ -1,12 +1,11 @@
 package store.controller
 
+import store.common.AppConfig
 import store.domain.InputValidator
 import store.domain.InventoryService
 import store.domain.StoreService
 import store.model.NumberBasket
-import store.model.Products
-import store.model.Promotions
-import store.resources.Messages.*
+import store.common.Messages.*
 import store.view.InputView
 import store.view.OutputView
 
@@ -17,20 +16,19 @@ class StoreController(
     inventoryService: InventoryService,
     private val storeService: StoreService
 ) {
-    private val products = inventoryService.loadProducts("src/main/resources/products.md")
-    private val promotions = inventoryService.loadPromotions("src/main/resources/promotions.md")
+    private val products = inventoryService.loadProducts(AppConfig.PRODUCTS_FILE.value)
+    private val promotions = inventoryService.loadPromotions(AppConfig.PROMOTIONS_FILE.value)
 
     fun orderProducts() {
-
+        showProducts()
     }
 
-    private fun generateNumberBasket(): NumberBasket {
-        val basket = NumberBasket()
-
-        basket.addNumber(readNumberWithRetry(LEFT_VALUE_INPUT.infoMessage()))
-        basket.addNumber(readNumberWithRetry(RIGHT_VALUE_INPUT.infoMessage()))
-
-        return basket
+    private fun showProducts() {
+        outputView.printMessage(WELCOME_ANNOUNCE.message())
+        products.forEach {
+            outputView.printProduct(it.toDto())
+        }
+        outputView.printBlankLine()
     }
 
     private fun readNumberWithRetry(infoMessage: String): Int {

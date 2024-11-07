@@ -2,7 +2,7 @@ package store.model
 
 import java.time.LocalDateTime
 
-data class Promotions(
+class Promotions(
     val name: String,
     val buy: Int,
     val get: Int,
