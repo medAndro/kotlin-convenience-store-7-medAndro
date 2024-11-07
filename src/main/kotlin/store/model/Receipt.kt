@@ -1,6 +1,7 @@
 package store.model
 
 import store.common.Messages.*
+import store.common.commaFormat
 
 class Receipt {
     private val totalProduct: MutableList<Product> = mutableListOf()
@@ -31,8 +32,9 @@ class Receipt {
         var totalAmount = 0
         var totalPrice = 0
         var discountPrice = 0
+
         totalProduct.forEach {
-            receiptText += "${it.getName()}\t\t ${it.getQuantity()}\t\t ${it.getPrice()*it.getQuantity()}\n"
+            receiptText += "${it.getName()}\t\t ${(it.getQuantity()).commaFormat()}\t\t ${(it.getPrice()*it.getQuantity()).commaFormat()}\n"
             totalAmount+=it.getQuantity()
             totalPrice+= it.getPrice()*it.getQuantity()
         }
@@ -40,17 +42,21 @@ class Receipt {
             receiptText += "=============증\t정===============\n"
         }
         promoProduct.forEach {
-            receiptText += "${it.getName()}\t\t ${it.getQuantity()}\n"
+            if(it.getQuantity()>0){
+            receiptText += "${it.getName()}\t\t ${(it.getQuantity()).commaFormat()}\n"
             discountPrice += it.getPrice()*it.getQuantity()
+            }
         }
         receiptText += "====================================\n"
-        receiptText += "총구매액\t\t$totalAmount\t$totalPrice\n"
-        receiptText += "행사할인\t\t\t-$discountPrice\n"
+        receiptText += "총구매액\t\t${totalAmount.commaFormat()}\t${totalPrice.commaFormat()}\n"
+        receiptText += "행사할인\t\t\t-${discountPrice.commaFormat()}\n"
 
+        val membershipDiscount = ((totalPrice - totalEventPrice) * 0.3).toInt()
         if (membershipFlag) {
-            receiptText += "멤버십할인\t\t\t-${totalPrice-totalEventPrice}\n"
+            receiptText += "멤버십할인\t\t\t-${membershipDiscount.commaFormat()}\n"
+            receiptText += "내실돈\t\t\t${(totalPrice-discountPrice-membershipDiscount).commaFormat()}\n"
         }
-        receiptText += "내실돈\t\t\t몰루\n"
+        receiptText += "내실돈\t\t\t${(totalPrice-discountPrice).commaFormat()}\n"
         return receiptText
     }
 

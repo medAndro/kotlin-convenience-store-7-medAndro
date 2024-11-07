@@ -20,11 +20,11 @@ class ProductRepository(
         }
     }
 
-    fun getBuyByPromoName(promoName: String): Int? {
+    fun getBuyByPromoName(promoName: String?): Int? {
 
         return promotions[promoName]?.getBuy()
     }
-    fun getGetByPromoName(promoName: String): Int? {
+    fun getGetByPromoName(promoName: String?): Int? {
 
         return promotions[promoName]?.getGet()
     }
@@ -34,16 +34,18 @@ class ProductRepository(
         receipt.setMembershipFlag(flag)
     }
 
-    fun addReceipt(product: Product, totalProductAmount: Int, bonusProductAmount: Int, get: Int, buy: Int) {
+    fun addReceipt(product: Product, totalProductAmount: Int, bonusProductAmount: Int, get: Int?, buy: Int?) {
         receipt.addPromoProduct(
             Product(product.getName(), product.getPrice(), -1, bonusProductAmount, null)
         )
         receipt.addTotalProduct(
             Product(product.getName(), product.getPrice(), -1, totalProductAmount, null)
         )
-        receipt.addEventPrice(
-            (bonusProductAmount / get) * (get + buy) * product.getPrice()
-        )
+        if (get != null && buy != null) {
+            receipt.addEventPrice(
+                (bonusProductAmount / get) * (get + buy) * product.getPrice()
+            )
+        }
     }
 
     fun getReceipt(): Receipt {

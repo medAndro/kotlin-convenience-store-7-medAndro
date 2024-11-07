@@ -8,14 +8,11 @@ class StoreService(
     private val inputView: InputView,
     private val productRepo: ProductRepository,
 ) {
-
     fun writeReceipt(buyProductName: String, buyQuantity: Int) {
         val product = productRepo.getProducts()[buyProductName]!!
         var getFree = 0
         val promotionName = product.getPromotionName()
-        if (promotionName.isNullOrBlank()) {
-            return
-        }
+
         val buy = productRepo.getBuyByPromoName(promotionName)
         val get = productRepo.getGetByPromoName(promotionName)
         if (buy != null && get != null) {
@@ -48,6 +45,8 @@ class StoreService(
             val unitCount = ((buyQuantity + getFree) / promoUnit)
             productRepo.addReceipt(product, buyQuantity + getFree, get * unitCount, get, buy)
 
+        }else{
+            productRepo.addReceipt(product, buyQuantity, 0, get,buy)
         }
     }
 
