@@ -22,7 +22,8 @@ class StoreController(
     fun orderProducts() {
         showStock()
         val boughtProductMap = inputView.readValidItem()
-        takeOutStock(boughtProductMap)
+        readPurchasedInfo(boughtProductMap)
+        storeService.readMembershipFlag()
     }
 
     private fun showStock() {
@@ -33,7 +34,7 @@ class StoreController(
         outputView.printBlankLine()
     }
 
-    private fun takeOutStock(boughtProductMap: Map<String, Int>) {
+    private fun readPurchasedInfo(boughtProductMap: Map<String, Int>) {
         boughtProductMap.forEach { (key, value) ->
             storeService.writeReceipt(key, value)
         }
