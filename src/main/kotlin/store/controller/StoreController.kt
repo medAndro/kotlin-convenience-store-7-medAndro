@@ -1,44 +1,63 @@
 package store.controller
 
 import store.common.AppConfig
-import store.domain.InputValidator
+import store.domain.InputValidater
 import store.domain.InventoryService
 import store.domain.StoreService
-import store.model.NumberBasket
 import store.common.Messages.*
+import store.domain.ProductRepository
 import store.view.InputView
 import store.view.OutputView
 
 class StoreController(
     private val inputView: InputView,
     private val outputView: OutputView,
-    private val validator: InputValidator,
+    private val validator: InputValidater,
     inventoryService: InventoryService,
-    private val storeService: StoreService
+    private val storeService: StoreService,
+    private val productRepository: ProductRepository
 ) {
-    private val products = inventoryService.loadMergedProducts(AppConfig.PRODUCTS_FILE.value)
-    private val promotions = inventoryService.loadPromotions(AppConfig.PROMOTIONS_FILE.value)
+
 
     fun orderProducts() {
-        showProducts()
+        showStock()
+        val map = inputView.readValidItem()
     }
 
-    private fun showProducts() {
+    private fun showStock() {
         outputView.printMessage(WELCOME_ANNOUNCE.message())
-        products.forEach {
+        productRepository.getProducts().forEach {
             outputView.printProduct(it.toDto())
         }
         outputView.printBlankLine()
     }
 
+
     companion object {
-        fun create(): StoreController {
-            val inputView = InputView()
-            val outputView = OutputView()
-            val inputValidator = InputValidator()
-            val inventoryService = InventoryService()
-            val storeService = StoreService()
-            return StoreController(inputView, outputView, inputValidator, inventoryService, storeService)
+        fun create() = StoreControllerBuilder().build()
+
+        private class StoreControllerBuilder {
+            private val outputView = OutputView()
+            private val inventoryService = InventoryService()
+            private val productRepository = initializeProductRepository(inventoryService)
+            private val storeService = StoreService()
+            private val inputValidater = InputValidater(productRepository)
+            private val inputView = InputView(outputView, inputValidater)
+
+            fun build() = StoreController(
+                inputView,
+                outputView,
+                inputValidater,
+                inventoryService,
+                storeService,
+                productRepository
+            )
+
+            private fun initializeProductRepository(inventoryService: InventoryService) =
+                ProductRepository(
+                    inventoryService.loadMergedProducts(AppConfig.PRODUCTS_FILE.value),
+                    inventoryService.loadPromotions(AppConfig.PROMOTIONS_FILE.value)
+                )
         }
     }
 }

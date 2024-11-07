@@ -1,20 +1,20 @@
 package store.domain
 
-import store.model.Products
-import store.model.Promotions
+import store.model.Product
+import store.model.Promotion
 import java.io.File
 import java.time.LocalDate
 
 class InventoryService {
 
-    fun loadMergedProducts(filePath: String): List<Products> {
+    fun loadMergedProducts(filePath: String): List<Product> {
         return mergeProducts(loadProducts(filePath))
     }
 
-    private fun loadProducts(filePath: String): List<Products> =
+    private fun loadProducts(filePath: String): List<Product> =
         readCsvLines(filePath) { line ->
             val (name, price, quantity, promotion) = line.split(",")
-            Products(
+            Product(
                 name = name,
                 price = price.toInt(),
                 promoQuantity = if (promotion != "null") quantity.toInt() else 0,
@@ -23,10 +23,10 @@ class InventoryService {
             )
         }
 
-    private fun mergeProducts(products: List<Products>): List<Products> =
+    private fun mergeProducts(products: List<Product>): List<Product> =
         products.groupBy { it.getName() }.map { (name, groupedProducts) ->
             val first = groupedProducts.first()
-            Products(
+            Product(
                 name = name,
                 price = first.getPrice(),
                 promoQuantity = groupedProducts.sumOf { it.getPromoQuantity() },
@@ -36,10 +36,10 @@ class InventoryService {
         }
 
 
-    fun loadPromotions(filePath: String): List<Promotions> =
+    fun loadPromotions(filePath: String): List<Promotion> =
         readCsvLines(filePath) { line ->
             val (name, buy, get, startDate, endDate) = line.split(",")
-            Promotions(
+            Promotion(
                 name = name,
                 buy = buy.toInt(),
                 get = get.toInt(),

@@ -1,15 +1,42 @@
 package store.view
 
 import camp.nextstep.edu.missionutils.Console
+import store.common.Messages
+import store.common.Messages.INVALID_ERROR
+import store.domain.InputValidater
 
-class InputView {
-    fun readItem(): String {
-        println("구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])")
-        val input = Console.readLine()
-        return input
+class InputView(
+    private val outputView: OutputView,
+    private val inputValidater: InputValidater
+) {
+
+    private fun <T> readUntilValidInput(validator: (String) -> T): T {
+        while (true) {
+            try {
+                val input = validator(readLine())
+                return input
+            } catch (e: IllegalArgumentException) {
+                outputView.printMessage(e.message ?: INVALID_ERROR.errorMessage())
+            }
+        }
     }
 
-    fun readLine(): String {
-        return Console.readLine()
+    fun readValidItem(): Map<String, Int> {
+        outputView.printMessage(Messages.INPUT_PRODUCT_NAME_QUANTITY.message())
+        return readUntilValidInput() { input ->
+            inputValidater.validateItems(input)
+        }
     }
+
+    fun readValidYN(): Boolean {
+        outputView.printMessage(Messages.INPUT_PRODUCT_NAME_QUANTITY.message())
+        return readUntilValidInput() { input ->
+            inputValidater.validateYN(input)
+        }
+
+    }
+
+
+
+    fun readLine(): String = Console.readLine()
 }

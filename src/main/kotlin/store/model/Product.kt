@@ -2,7 +2,7 @@ package store.model
 
 import store.dto.ProductDto
 
-class Products(
+class Product(
     private val name: String,
     private val price: Int,
     private var promoQuantity: Int,
