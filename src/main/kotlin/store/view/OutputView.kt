@@ -6,6 +6,9 @@ import store.common.commaFormat
 
 class OutputView {
     fun printProduct(dto: ProductDto) {
+        if (dto.promoQuantity == 0 && dto.promotion != null) {
+            printSoldOutPromoProduct(dto)
+        }
         if (dto.promoQuantity > 0) {
             printPromoProduct(dto)
         }
@@ -15,6 +18,7 @@ class OutputView {
         if (dto.promoQuantity > 0 && dto.quantity == 0){
             printSoldOutProduct(dto)
         }
+
     }
 
     private fun printPromoProduct(dto: ProductDto) {
@@ -43,6 +47,16 @@ class OutputView {
             PRODUCT_SOLD_OUT_FORMAT.formattedMessage(
                 dto.name,
                 dto.price.commaFormat()
+            )
+        )
+    }
+
+    private fun printSoldOutPromoProduct(dto: ProductDto) {
+        println(
+            PRODUCT_SOLD_OUT_PROMO_FORMAT.formattedMessage(
+                dto.name,
+                dto.price.commaFormat(),
+                dto.promotion?.let { " $it" } ?: ""
             )
         )
     }

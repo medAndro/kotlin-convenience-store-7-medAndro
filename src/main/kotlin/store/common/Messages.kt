@@ -6,7 +6,7 @@ enum class Messages(private val message: String) {
     PRODUCT_PROMO_FORMAT("- %s %s원 %s개 %s"),
     PRODUCT_FORMAT("- %s %s원 %s개"),
     PRODUCT_SOLD_OUT_FORMAT("- %s %s원 재고 없음"),
-
+    PRODUCT_SOLD_OUT_PROMO_FORMAT("- %s %s원 재고 없음%s"),
     INPUT_PRODUCT_NAME_QUANTITY("구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])"),
 
 
