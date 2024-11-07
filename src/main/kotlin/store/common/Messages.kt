@@ -16,15 +16,12 @@ enum class Messages(private val message: String) {
     INPUT_MEMBERSHIP("멤버십 할인을 받으시겠습니까?"),
 
 
-//    LEFT_VALUE_INPUT("좌변의 값을 입력하세요"),
-//    RIGHT_VALUE_INPUT("우변의 값을 입력하세요"),
-//    SUM_RESULT(
-//        """
-//        덧셈 결과
-//        ---
-//        %s = %s
-//        """.trimIndent()
-//    ),
+    CONVENIENCE_STORE("==============W 편의점================"),
+    CONVENIENCE_STORE_HEAD("상품명\t\t수량\t금액"),
+
+    BONUS("=============증\t정==============="),
+
+
 
     ERROR("[ERROR] %s"),
     INPUT_ERROR("[ERROR] %s 다시 입력해 주세요."),

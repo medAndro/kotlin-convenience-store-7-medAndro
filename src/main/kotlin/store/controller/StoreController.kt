@@ -24,6 +24,7 @@ class StoreController(
         val boughtProductMap = inputView.readValidItem()
         readPurchasedInfo(boughtProductMap)
         storeService.readMembershipFlag()
+        println(productRepository.getReceipt().getFullReceiptText())
     }
 
     private fun showStock() {
@@ -47,7 +48,7 @@ class StoreController(
         private class StoreControllerBuilder {
             private val outputView = OutputView()
             private val inventoryService = InventoryService()
-            private val productRepository = initializeProductRepository(inventoryService)
+            private val productRepository = initializeProductRepository(inventoryService, outputView)
             private val inputValidater = InputValidater(productRepository)
             private val inputView = InputView(outputView, inputValidater)
             private val storeService = StoreService(inputView, productRepository)
@@ -61,10 +62,11 @@ class StoreController(
                 productRepository
             )
 
-            private fun initializeProductRepository(inventoryService: InventoryService) =
+            private fun initializeProductRepository(inventoryService: InventoryService, outputView: OutputView) =
                 ProductRepository(
                     inventoryService.loadMergedProducts(AppConfig.PRODUCTS_FILE.value),
-                    inventoryService.loadPromotions(AppConfig.PROMOTIONS_FILE.value)
+                    inventoryService.loadPromotions(AppConfig.PROMOTIONS_FILE.value),
+                    outputView
                 )
         }
     }

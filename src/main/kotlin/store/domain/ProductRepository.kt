@@ -3,10 +3,12 @@ package store.domain
 import store.model.Product
 import store.model.Promotion
 import store.model.Receipt
+import store.view.OutputView
 
 class ProductRepository(
     private var products: LinkedHashMap<String, Product>,
     private var promotions: LinkedHashMap<String, Promotion>,
+    private var outputView: OutputView,
     private var receipt: Receipt = Receipt()
 ) {
     fun getProducts(): LinkedHashMap<String, Product> = products
@@ -44,6 +46,9 @@ class ProductRepository(
         )
     }
 
+    fun getReceipt(): Receipt {
+        return receipt
+    }
     fun clearReceipt() {
         receipt = Receipt()
     }
