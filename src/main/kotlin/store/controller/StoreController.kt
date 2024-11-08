@@ -12,12 +12,9 @@ import store.view.OutputView
 class StoreController(
     private val inputView: InputView,
     private val outputView: OutputView,
-    private val validator: InputValidater,
-    inventoryService: InventoryService,
     private val storeService: StoreService,
     private val productRepository: ProductRepository
 ) {
-
     fun startConvenienceStore() {
         orderProducts()
         readExtraPurchasesYn()
@@ -68,8 +65,6 @@ class StoreController(
             fun build() = StoreController(
                 inputView,
                 outputView,
-                inputValidater,
-                inventoryService,
                 storeService,
                 productRepository
             )

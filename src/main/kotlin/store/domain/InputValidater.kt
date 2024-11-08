@@ -1,8 +1,6 @@
 package store.domain
 
-import camp.nextstep.edu.missionutils.Console
 import store.common.Messages.*
-import store.view.OutputView
 
 class InputValidater(
     private val productRepository: ProductRepository
@@ -10,12 +8,10 @@ class InputValidater(
 
     fun validateItems(input: String): Map<String, Int> {
         require(input.isNotBlank()) { INVALID_INPUT.inputErrorMessage() }
-
         val splitInputText = validateSplitInputText(input)
         val primitiveParsedMap = parseInputToMap(splitInputText)
         return validateParsedMap(primitiveParsedMap, productRepository.getAllProductQuantity())
     }
-
 
     private fun validateSplitInputText(input: String): List<String> {
         val splitInput = input.split(',')
@@ -49,12 +45,9 @@ class InputValidater(
     }
 
     fun validateYN(input: String): Boolean {
-        if (input.uppercase() == "Y") {
-            return true
-        }
-        if (input.uppercase() == "N") {
-            return false
-        }
+        if (input.uppercase() == "Y") return true
+        if (input.uppercase() == "N") return false
+
         throw IllegalArgumentException(INVALID_INPUT_ERROR.inputErrorMessage())
     }
 }

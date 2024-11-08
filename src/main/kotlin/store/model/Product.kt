@@ -24,12 +24,20 @@ class Product(
     fun getPromotionName() = promotion
 
     fun setQuantityReduce(reduceQuantity: Int) {
+        val remainingQuantity = reducePromoQuantity(reduceQuantity)
+        reduceNormalQuantity(remainingQuantity)
+    }
+
+    private fun reducePromoQuantity(reduceQuantity: Int): Int {
         val promoReduction = minOf(promoQuantity, reduceQuantity)
         promoQuantity -= promoReduction
 
-        val remainingReduction = reduceQuantity - promoReduction
-        if (remainingReduction > 0) {
-            quantity -= remainingReduction
+        return reduceQuantity - promoReduction
+    }
+
+    private fun reduceNormalQuantity(remainingQuantity: Int) {
+        if (remainingQuantity > 0) {
+            quantity -= remainingQuantity
         }
     }
 }

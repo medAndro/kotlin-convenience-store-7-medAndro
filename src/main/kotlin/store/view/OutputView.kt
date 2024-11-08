@@ -6,19 +6,10 @@ import store.common.commaFormat
 
 class OutputView {
     fun printProduct(dto: ProductDto) {
-        if (dto.promoQuantity == 0 && dto.promotion != null) {
-            printSoldOutPromoProduct(dto)
-        }
-        if (dto.promoQuantity > 0) {
-            printPromoProduct(dto)
-        }
-        if (dto.quantity > 0){
-            printNormalProduct(dto)
-        }
-        if (dto.quantity == 0){
-            printSoldOutProduct(dto)
-        }
-
+        if (dto.promoQuantity == 0 && dto.promotion != null) printSoldOutPromoProduct(dto)
+        if (dto.promoQuantity > 0) printPromoProduct(dto)
+        if (dto.quantity > 0) printNormalProduct(dto)
+        if (dto.quantity == 0) printSoldOutProduct(dto)
     }
 
     private fun printPromoProduct(dto: ProductDto) {

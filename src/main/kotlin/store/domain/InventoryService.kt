@@ -66,7 +66,6 @@ class InventoryService {
         promotion = null
     )
 
-
     private fun mergeProducts(products: List<Product>): List<Product> =
         products.groupBy { it.getName() }.map { (name, groupedProducts) ->
             val first = groupedProducts.first()
@@ -78,7 +77,6 @@ class InventoryService {
                 promotion = groupedProducts.firstNotNullOfOrNull { it.getPromotionName() }
             )
         }
-
 
     fun loadPromotions(filePath: String): LinkedHashMap<String, Promotion> {
         val promotions = readPromotionsFromFile(filePath)
@@ -97,7 +95,6 @@ class InventoryService {
             )
         }
     }
-
 
     private fun <T> readCsvLines(filePath: String, mapper: (String) -> T): List<T> =
         File(filePath).readLines().drop(1).map(mapper)
