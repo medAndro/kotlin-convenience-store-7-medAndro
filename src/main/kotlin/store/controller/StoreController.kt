@@ -47,12 +47,12 @@ class StoreController(
     }
 
     private fun readExtraPurchasesYn() {
-
-
-        orderProducts()
-
+        if (storeService.isExtraPurchases()) {
+            productRepository.clearReceipt()
+            orderProducts()
+            readExtraPurchasesYn()
+        }
     }
-
 
     companion object {
         fun create() = StoreControllerBuilder().build()

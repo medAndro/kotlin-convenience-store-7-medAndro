@@ -59,4 +59,9 @@ class StoreService(
         }
     }
 
+    fun isExtraPurchases(): Boolean {
+        val infoMessage = Messages.INPUT_EXTRA_PURCHASES.ynMessage()
+        return inputView.readValidYN(infoMessage)
+    }
+
 }

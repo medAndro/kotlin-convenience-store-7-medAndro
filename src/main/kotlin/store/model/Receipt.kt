@@ -56,12 +56,12 @@ class Receipt {
         receiptText += "행사할인\t\t\t-${discountPrice.commaFormat()}\n"
 
         val membershipDiscount = ((totalPrice - totalEventPrice) * 0.3).toInt().coerceAtMost(8000)
-
-        if (membershipFlag) {
-            receiptText += "멤버십할인\t\t\t-${membershipDiscount.commaFormat()}\n"
-            receiptText += "내실돈\t\t\t${(totalPrice-discountPrice-membershipDiscount).commaFormat()}\n"
-        }else{
-            receiptText += "내실돈\t\t\t${(totalPrice-discountPrice).commaFormat()}\n"
+        receiptText += if (membershipFlag) {
+            "멤버십할인\t\t\t-${membershipDiscount.commaFormat()}\n" +
+                    "내실돈\t\t\t${(totalPrice-discountPrice-membershipDiscount).commaFormat()}\n"
+        } else {
+            "멤버십할인\t\t\t-0\n" +
+                    "내실돈\t\t\t${(totalPrice-discountPrice).commaFormat()}\n"
         }
         return receiptText
     }
