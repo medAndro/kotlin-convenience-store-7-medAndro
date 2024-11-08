@@ -15,7 +15,7 @@ class OutputView {
         if (dto.quantity > 0){
             printNormalProduct(dto)
         }
-        if (dto.promoQuantity > 0 && dto.quantity == 0){
+        if (dto.quantity == 0){
             printSoldOutProduct(dto)
         }
 
