@@ -4,5 +4,5 @@ import store.controller.StoreController
 
 fun main() {
     val store = StoreController.create()
-    store.orderProducts()
+    store.startConvenienceStore()
 }

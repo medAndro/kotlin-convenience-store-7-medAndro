@@ -51,6 +51,18 @@ class ProductRepository(
     fun getReceipt(): Receipt {
         return receipt
     }
+
+    fun updateReceiptStock() {
+        val totalBoughtProduct = receipt.getTotalProduct()
+        totalBoughtProduct.forEach { boughtProduct ->
+            products[boughtProduct.getName()]?.let { product ->
+                val boughtQuantity = boughtProduct.getQuantity()
+                product.setQuantityReduce(boughtQuantity)
+            }
+        }
+    }
+
+
     fun clearReceipt() {
         receipt = Receipt()
     }

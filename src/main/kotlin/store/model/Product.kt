@@ -22,4 +22,14 @@ class Product(
     fun getPromoQuantity() = promoQuantity
     fun getQuantity() = quantity
     fun getPromotionName() = promotion
+
+    fun setQuantityReduce(reduceQuantity: Int) {
+        val promoReduction = minOf(promoQuantity, reduceQuantity)
+        promoQuantity -= promoReduction
+
+        val remainingReduction = reduceQuantity - promoReduction
+        if (remainingReduction > 0) {
+            quantity -= remainingReduction
+        }
+    }
 }

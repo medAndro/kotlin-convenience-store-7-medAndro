@@ -18,13 +18,18 @@ class StoreController(
     private val productRepository: ProductRepository
 ) {
 
+    fun startConvenienceStore() {
+        orderProducts()
+        readExtraPurchasesYn()
+    }
 
-    fun orderProducts() {
+    private fun orderProducts() {
         showStock()
         val boughtProductMap = inputView.readValidItem()
         readPurchasedInfo(boughtProductMap)
         storeService.readMembershipFlag()
         println(productRepository.getReceipt().getFullReceiptText())
+        productRepository.updateReceiptStock()
     }
 
     private fun showStock() {
@@ -39,6 +44,13 @@ class StoreController(
         boughtProductMap.forEach { (key, value) ->
             storeService.writeReceipt(key, value)
         }
+    }
+
+    private fun readExtraPurchasesYn() {
+
+
+        orderProducts()
+
     }
 
 

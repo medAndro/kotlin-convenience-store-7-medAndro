@@ -27,6 +27,9 @@ class Receipt {
     fun setMembershipFlag(membershipFlag: Boolean){
         this.membershipFlag = membershipFlag
     }
+
+    fun getTotalProduct(): MutableList<Product> = totalProduct
+
     fun getFullReceiptText(): String {
         var receiptText = "==============W 편의점================\n상품명\t\t수량\t금액\n"
         var totalAmount = 0
