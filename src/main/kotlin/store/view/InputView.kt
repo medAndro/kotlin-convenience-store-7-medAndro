@@ -24,14 +24,14 @@ class InputView(
 
     fun readValidItem(): Map<String, Int> {
         outputView.printMessage(Messages.INPUT_PRODUCT_NAME_QUANTITY.message())
-        return readUntilValidInput() { input ->
+        return readUntilValidInput { input ->
             inputValidater.validateItems(input)
         }
     }
 
     fun readValidYN(infoMessage: String): Boolean {
         outputView.printMessage(infoMessage)
-        return readUntilValidInput() { input ->
+        return readUntilValidInput { input ->
             inputValidater.validateYN(input)
         }
     }

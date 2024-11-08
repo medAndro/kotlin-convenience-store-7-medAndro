@@ -15,6 +15,14 @@ enum class Messages(private val message: String) {
     INPUT_MEMBERSHIP("멤버십 할인을 받으시겠습니까?"),
     INPUT_EXTRA_PURCHASES("감사합니다. 구매하고 싶은 다른 상품이 있나요?"),
 
+    RECEIPT_HEADER("==============W 편의점================\n상품명\t\t수량\t금액\n"),
+    RECEIPT_PROMOTION_HEADER("=============증\t정===============\n"),
+    RECEIPT_FOOTER("====================================\n"),
+    RECEIPT_TOTAL("총구매액\t\t%s\t%s\n"),
+    RECEIPT_EVENT_DISCOUNT("행사할인\t\t\t-%s\n"),
+    RECEIPT_MEMBERSHIP_DISCOUNT("멤버십할인\t\t\t-%s\n"),
+    RECEIPT_FINAL_AMOUNT("내실돈\t\t\t %s\n"),
+
     ERROR("[ERROR] %s"),
     INPUT_ERROR("[ERROR] %s 다시 입력해 주세요."),
     INVALID_INPUT("올바르지 않은 형식으로 입력했습니다."),
