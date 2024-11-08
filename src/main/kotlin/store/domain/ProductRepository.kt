@@ -62,7 +62,6 @@ class ProductRepository(
         }
     }
 
-
     fun clearReceipt() {
         receipt = Receipt()
     }

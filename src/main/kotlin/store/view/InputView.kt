@@ -36,7 +36,5 @@ class InputView(
         }
     }
 
-
-
-    fun readLine(): String = Console.readLine()
+    private fun readLine(): String = Console.readLine()
 }

@@ -37,7 +37,7 @@ class Receipt {
         var discountPrice = 0
 
         totalProduct.forEach {
-            receiptText += "${it.getName()}\t\t ${(it.getQuantity()).commaFormat()}\t\t ${(it.getPrice()*it.getQuantity()).commaFormat()}\n"
+            receiptText += "${it.getName()}\t\t${(it.getQuantity()).commaFormat()} \t${(it.getPrice()*it.getQuantity()).commaFormat()}\n"
             totalAmount+=it.getQuantity()
             totalPrice+= it.getPrice()*it.getQuantity()
         }
@@ -47,7 +47,7 @@ class Receipt {
         }
         promoProduct.forEach {
             if (it.getQuantity() > 0) {
-                receiptText += "${it.getName()}\t\t ${(it.getQuantity()).commaFormat()}\n"
+                receiptText += "${it.getName()}\t\t${(it.getQuantity()).commaFormat()}\n"
                 discountPrice += it.getPrice()*it.getQuantity()
             }
         }
@@ -61,7 +61,7 @@ class Receipt {
                     "내실돈\t\t\t${(totalPrice-discountPrice-membershipDiscount).commaFormat()}\n"
         } else {
             "멤버십할인\t\t\t-0\n" +
-                    "내실돈\t\t\t${(totalPrice-discountPrice).commaFormat()}\n"
+                    "내실돈\t\t\t ${(totalPrice-discountPrice).commaFormat()}\n"
         }
         return receiptText
     }

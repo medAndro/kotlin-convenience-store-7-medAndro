@@ -1,49 +1,57 @@
 package store.domain
 
 import store.common.Messages
-import store.model.Product
 import store.view.InputView
 
 class StoreService(
     private val inputView: InputView,
     private val productRepo: ProductRepository,
 ) {
-    fun writeReceipt(buyProductName: String, buyQuantity: Int) {
+    fun writeReceipt(buyProductName: String, buyQuantityOrigin: Int) {
         val product = productRepo.getProducts()[buyProductName]!!
-        var getFree = 0
         val promotionName = product.getPromotionName()
+        var buyQuantity = buyQuantityOrigin
 
         val buy = productRepo.getBuyByPromoName(promotionName)
         val get = productRepo.getGetByPromoName(promotionName)
         if (buy != null && get != null) {
             val promoUnit = buy + get
-            //추가여부 입력 기능
-            val remain = buyQuantity % promoUnit
+            var remain = buyQuantity % promoUnit
 
-            if (remain == buy && ((buyQuantity + get) <= product.getPromoQuantity())) {
-                val addPromoInfoMessage = Messages.INPUT_ADD_PROMOTION.ynMessage(buyProductName, get)
+            val isCanGetBonusbak = remain == buy && ((buyQuantity + get) <= product.getPromoQuantity())
+            val isCanGetBonus = remain >= buy && ((buyQuantity + get) <= product.getPromoQuantity())
+            val getFreeAmount = get - (remain-buy)
+            if (isCanGetBonus) {
+                val addPromoInfoMessage = Messages.INPUT_ADD_PROMOTION.ynMessage(buyProductName, getFreeAmount)
+                // 증정품 추가여부 입력 상자 호출
                 if(inputView.readValidYN(addPromoInfoMessage)){
-                    getFree += get
+                    buyQuantity += getFreeAmount
+                    remain = buyQuantity % promoUnit
                 }
             }
 
-            // 일반적인 재고부족 확인기능
-            if (product.getPromoQuantity() in 1..<buyQuantity) {
-                val canNotPromoAmount = buyQuantity - ((product.getPromoQuantity() / promoUnit) * promoUnit)
+            var cantBuyPromoUnitAmount = (buyQuantity / promoUnit) - (product.getPromoQuantity() / promoUnit)
+            if (cantBuyPromoUnitAmount < 0) {
+                cantBuyPromoUnitAmount = 0
+            }
+            val canNotPromoAmount = remain+(cantBuyPromoUnitAmount*promoUnit)
+            var bonusAmount = get * ((buyQuantity-canNotPromoAmount) / promoUnit)
+
+            if (canNotPromoAmount>0) {
                 val infoMessage = Messages.INPUT_NOT_DISCOUNT.ynMessage(buyProductName, canNotPromoAmount)
-                if (inputView.readValidYN(infoMessage)) { // 프로모션 할인이 적용되지 않아도 구매
-                    val bonusProductAmount = (product.getPromoQuantity() / promoUnit)
-                    productRepo.addReceipt(product, buyQuantity, bonusProductAmount, get, buy)
-                    return
+
+                // 프로모션 할인 증정이 적용되지 않아도 구매 Y/N 입력폼
+                if (inputView.readValidYN(infoMessage)) {
+//                    productRepo.addReceipt(product, buyQuantity, get * (buyQuantity / promoUnit), get, buy)
+//                    return
                 } else {
-                    val unitCount = (product.getPromoQuantity() / promoUnit)
-                    productRepo.addReceipt(product, promoUnit * unitCount, get * unitCount, get, buy)
-                    return
+                    buyQuantity -= canNotPromoAmount
+//                    productRepo.addReceipt(product, buyQuantity , bonusAmount, get, buy)
+//                    return
                 }
             }
 
-            val unitCount = ((buyQuantity + getFree) / promoUnit)
-            productRepo.addReceipt(product, buyQuantity + getFree, get * unitCount, get, buy)
+            productRepo.addReceipt(product, buyQuantity, bonusAmount, get, buy)
 
         }else{
             productRepo.addReceipt(product, buyQuantity, 0, get,buy)
