@@ -38,25 +38,28 @@ class Receipt {
             totalAmount+=it.getQuantity()
             totalPrice+= it.getPrice()*it.getQuantity()
         }
-        if (promoProduct.size > 0) {
+
+        if (promoProduct.any { it.getQuantity() > 0 }) {
             receiptText += "=============증\t정===============\n"
         }
         promoProduct.forEach {
-            if(it.getQuantity()>0){
-            receiptText += "${it.getName()}\t\t ${(it.getQuantity()).commaFormat()}\n"
-            discountPrice += it.getPrice()*it.getQuantity()
+            if (it.getQuantity() > 0) {
+                receiptText += "${it.getName()}\t\t ${(it.getQuantity()).commaFormat()}\n"
+                discountPrice += it.getPrice()*it.getQuantity()
             }
         }
         receiptText += "====================================\n"
         receiptText += "총구매액\t\t${totalAmount.commaFormat()}\t${totalPrice.commaFormat()}\n"
         receiptText += "행사할인\t\t\t-${discountPrice.commaFormat()}\n"
 
-        val membershipDiscount = ((totalPrice - totalEventPrice) * 0.3).toInt()
+        val membershipDiscount = ((totalPrice - totalEventPrice) * 0.3).toInt().coerceAtMost(8000)
+
         if (membershipFlag) {
             receiptText += "멤버십할인\t\t\t-${membershipDiscount.commaFormat()}\n"
             receiptText += "내실돈\t\t\t${(totalPrice-discountPrice-membershipDiscount).commaFormat()}\n"
+        }else{
+            receiptText += "내실돈\t\t\t${(totalPrice-discountPrice).commaFormat()}\n"
         }
-        receiptText += "내실돈\t\t\t${(totalPrice-discountPrice).commaFormat()}\n"
         return receiptText
     }
 
