@@ -17,12 +17,11 @@ class ProductRepository(
         }
     }
 
-    fun getBuyByPromoName(promoName: String?): Int? {
-        return promotions[promoName]?.getBuy()
-    }
-
-    fun getGetByPromoName(promoName: String?): Int? {
-        return promotions[promoName]?.getGet()
+    fun getBuyGetPairByPromoName(promoName: String?): Pair<Int?, Int?> {
+        return Pair(
+            promotions[promoName]?.getBuy(),
+            promotions[promoName]?.getGet()
+        )
     }
 
     fun setReceiptMembershipFlag(flag: Boolean) {

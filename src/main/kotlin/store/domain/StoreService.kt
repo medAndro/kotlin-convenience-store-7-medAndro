@@ -2,6 +2,7 @@ package store.domain
 
 import store.common.Messages
 import store.view.InputView
+import store.model.Product
 
 class StoreService(
     private val inputView: InputView,
@@ -9,67 +10,79 @@ class StoreService(
 ) {
     fun writeReceipt(buyProductName: String, buyQuantityOrigin: Int) {
         val product = productRepo.getProducts()[buyProductName]!!
-        val promotionName = product.getPromotionName()
-        var buyQuantity = buyQuantityOrigin
-
-        val buy = productRepo.getBuyByPromoName(promotionName)
-        val get = productRepo.getGetByPromoName(promotionName)
-        if (buy != null && get != null) {
-            val promoUnit = buy + get
-            var remain = buyQuantity % promoUnit
-
-            val isCanGetBonusbak = remain == buy && ((buyQuantity + get) <= product.getPromoQuantity())
-            val isCanGetBonus = remain >= buy && ((buyQuantity + get) <= product.getPromoQuantity())
-            val getFreeAmount = get - (remain-buy)
-            if (isCanGetBonus) {
-                val addPromoInfoMessage = Messages.INPUT_ADD_PROMOTION.ynMessage(buyProductName, getFreeAmount)
-                // 증정품 추가여부 입력 상자 호출
-                if(inputView.readValidYN(addPromoInfoMessage)){
-                    buyQuantity += getFreeAmount
-                    remain = buyQuantity % promoUnit
-                }
-            }
-
-            var cantBuyPromoUnitAmount = (buyQuantity / promoUnit) - (product.getPromoQuantity() / promoUnit)
-            if (cantBuyPromoUnitAmount < 0) {
-                cantBuyPromoUnitAmount = 0
-            }
-            val canNotPromoAmount = remain+(cantBuyPromoUnitAmount*promoUnit)
-            var bonusAmount = get * ((buyQuantity-canNotPromoAmount) / promoUnit)
-
-            if (canNotPromoAmount>0) {
-                val infoMessage = Messages.INPUT_NOT_DISCOUNT.ynMessage(buyProductName, canNotPromoAmount)
-
-                // 프로모션 할인 증정이 적용되지 않아도 구매 Y/N 입력폼
-                if (inputView.readValidYN(infoMessage)) {
-//                    productRepo.addReceipt(product, buyQuantity, get * (buyQuantity / promoUnit), get, buy)
-//                    return
-                } else {
-                    buyQuantity -= canNotPromoAmount
-//                    productRepo.addReceipt(product, buyQuantity , bonusAmount, get, buy)
-//                    return
-                }
-            }
-
-            productRepo.addReceipt(product, buyQuantity, bonusAmount, get, buy)
-
-        }else{
-            productRepo.addReceipt(product, buyQuantity, 0, get,buy)
-        }
+        processReceipt(product, buyQuantityOrigin)
     }
 
-    fun readMembershipFlag(){
-        val infoMessage = Messages.INPUT_MEMBERSHIP.ynMessage()
-        if (inputView.readValidYN(infoMessage)){
-            productRepo.setReceiptMembershipFlag(true)
-        } else {
-            productRepo.setReceiptMembershipFlag(false)
+    private fun processReceipt(product: Product, buyQuantityOrigin: Int) {
+        val promotionInfo = productRepo.getBuyGetPairByPromoName(product.getPromotionName())
+        if (promotionInfo.first == null) {
+            productRepo.addReceipt(product, buyQuantityOrigin, 0, null, null)
+            return
         }
+        processPromotionalProduct(product, buyQuantityOrigin, promotionInfo)
+    }
+
+    private fun processPromotionalProduct(product: Product, buyQuantityOrigin: Int, promotionInfo: Pair<Int?, Int?>) {
+        val (buy, get) = promotionInfo
+        requireNotNull(buy)
+        requireNotNull(get)
+
+        val adjustedQuantity = calculatePromotionalQuantity(product, buyQuantityOrigin, buy, get)
+        val (finalQuantity, bonusAmount) = calculateFinalAmounts(product, adjustedQuantity, buy, get)
+
+        productRepo.addReceipt(product, finalQuantity, bonusAmount, get, buy)
+    }
+
+    private fun calculatePromotionalQuantity(product: Product, buyQuantity: Int, buy: Int, get: Int): Int {
+        val promoUnit = buy + get
+        val remain = buyQuantity % promoUnit
+        if (remain >= buy && ((buyQuantity + get) <= product.getPromoQuantity())) {
+            val freeAmount = get - (remain - buy)
+            if (inputView.readValidYN(Messages.INPUT_ADD_PROMOTION.ynMessage(product.getName(), freeAmount))) {
+                return buyQuantity + freeAmount
+            }
+        }
+        return buyQuantity
+    }
+
+    private fun calculateFinalAmounts(product: Product, buyQuantity: Int, buy: Int, get: Int): Pair<Int, Int> {
+        val nonPromotionalAmount = calculateNonPromotionalAmount(product, buyQuantity, buy, get)
+        val finalQuantity = adjustQuantityByUserInput(product, buyQuantity, nonPromotionalAmount)
+        return calculateBonusAmount(buyQuantity, finalQuantity, nonPromotionalAmount, buy, get)
+    }
+
+    private fun calculateNonPromotionalAmount(product: Product, buyQuantity: Int, buy: Int, get: Int): Int {
+        val promoUnit = buy + get
+        val remain = buyQuantity % promoUnit
+        val nonPromotionalUnits = ((buyQuantity / promoUnit) - (product.getPromoQuantity() / promoUnit))
+            .coerceAtLeast(0)
+        return remain + (nonPromotionalUnits * promoUnit)
+    }
+
+    private fun adjustQuantityByUserInput(product: Product, buyQuantity: Int, nonPromotionalAmount: Int): Int {
+        if (nonPromotionalAmount == 0) return buyQuantity
+        val message = Messages.INPUT_NOT_DISCOUNT.ynMessage(product.getName(), nonPromotionalAmount)
+        if (inputView.readValidYN(message)) return buyQuantity
+        return buyQuantity - nonPromotionalAmount
+    }
+
+    private fun calculateBonusAmount(
+        buyQuantity: Int, finalQuantity: Int, nonPromotionalAmount: Int, buy: Int, get: Int
+    ): Pair<Int, Int> {
+        val promoUnit = buy + get
+        val bonusAmount = get * ((buyQuantity - nonPromotionalAmount) / promoUnit)
+
+        return Pair(finalQuantity, bonusAmount)
+    }
+
+    fun readMembershipFlag() {
+        val infoMessage = Messages.INPUT_MEMBERSHIP.ynMessage()
+        val isMembership = inputView.readValidYN(infoMessage)
+        productRepo.setReceiptMembershipFlag(isMembership)
     }
 
     fun isExtraPurchases(): Boolean {
         val infoMessage = Messages.INPUT_EXTRA_PURCHASES.ynMessage()
         return inputView.readValidYN(infoMessage)
     }
-
 }
