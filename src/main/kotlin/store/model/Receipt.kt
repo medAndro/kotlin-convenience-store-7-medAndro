@@ -86,7 +86,7 @@ class Receipt {
         append(RECEIPT_FINAL_AMOUNT.formattedMessage(getFinalAmount(totalPrice, discountPrice, membershipDiscount)))
     }
 
-    private fun getMembershipDiscountCommaText(membershipDiscount: Int): String{
+    private fun getMembershipDiscountCommaText(membershipDiscount: Int): String {
         if (membershipFlag) return membershipDiscount.commaFormat()
         return "0"
     }
@@ -94,7 +94,7 @@ class Receipt {
     private fun getFinalAmount(totalPrice: Int, discountPrice: Int, membershipDiscount: Int): String =
         (totalPrice - discountPrice - getMembershipDiscountNumber(membershipDiscount)).commaFormat()
 
-    private fun getMembershipDiscountNumber(membershipDiscount: Int): Int{
+    private fun getMembershipDiscountNumber(membershipDiscount: Int): Int {
         if (membershipFlag) return membershipDiscount
         return 0
     }
