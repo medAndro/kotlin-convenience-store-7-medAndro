@@ -26,14 +26,14 @@ class InventoryService {
 
     private fun createProductByPromotion(
         name: String, price: String, quantity: String, promotion: String, promotionMap: Map<String, Promotion>
-    ): Product = when {
-        isValidPromotionDate(
+    ): Product {
+        val isValidPromotion = isValidPromotionDate(
             promotion,
             promotionMap[promotion]?.getStartDate(),
             promotionMap[promotion]?.getEndDate()
-        ) -> createPromotionalProduct(name, price, quantity, promotion)
-
-        else -> createNormalProduct(name, price, quantity)
+        )
+        if (!isValidPromotion) return createNormalProduct(name, price, quantity)
+        return createPromotionalProduct(name, price, quantity, promotion)
     }
 
     private fun isValidPromotionDate(
@@ -51,10 +51,20 @@ class InventoryService {
     ): Product = Product(
         name = name,
         price = price.toInt(),
-        promoQuantity = if (promotion != "null") quantity.toInt() else 0,
-        quantity = if (promotion == "null") quantity.toInt() else 0,
+        promoQuantity = calculatePromoQuantity(promotion, quantity),
+        quantity = calculateNormalQuantity(promotion, quantity),
         promotion = promotion.takeUnless { it == "null" }
     )
+
+    private fun calculatePromoQuantity(promotion: String, quantity: String): Int {
+        if (promotion != "null") return quantity.toInt()
+        return 0
+    }
+
+    private fun calculateNormalQuantity(promotion: String, quantity: String): Int {
+        if (promotion == "null") return quantity.toInt()
+        return 0
+    }
 
     private fun createNormalProduct(
         name: String, price: String, quantity: String

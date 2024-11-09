@@ -9,8 +9,8 @@ class StoreService(
     private val productRepo: ProductRepository,
 ) {
     fun writeReceipt(buyProductName: String, buyQuantityOrigin: Int) {
-        val product = productRepo.getProducts()[buyProductName]!!
-        processReceipt(product, buyQuantityOrigin)
+        val product = productRepo.getProducts()[buyProductName]
+        if (product != null) processReceipt(product, buyQuantityOrigin)
     }
 
     private fun processReceipt(product: Product, buyQuantityOrigin: Int) {
