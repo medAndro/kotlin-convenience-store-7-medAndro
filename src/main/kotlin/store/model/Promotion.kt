@@ -8,7 +8,7 @@ class Promotion(
     private val get: Int,
     private val startDate: LocalDateTime,
     private val endDate: LocalDateTime
-){
+) {
     fun getName() = name
     fun getBuy() = buy
     fun getGet() = get

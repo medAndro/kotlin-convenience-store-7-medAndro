@@ -18,11 +18,11 @@ class Receipt {
         totalProduct += product
     }
 
-    fun addPromoProduct(product: Product){
+    fun addPromoProduct(product: Product) {
         promoProduct += product
     }
 
-    fun setMembershipFlag(membershipFlag: Boolean){
+    fun setMembershipFlag(membershipFlag: Boolean) {
         this.membershipFlag = membershipFlag
     }
 

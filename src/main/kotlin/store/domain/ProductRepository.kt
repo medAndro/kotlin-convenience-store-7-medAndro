@@ -33,7 +33,7 @@ class ProductRepository(
         addEventPriceIfApplicable(product, bonusProductAmount, get, buy)
     }
 
-    private fun addProductsToReceipt(product: Product,totalProductAmount: Int,bonusProductAmount: Int) {
+    private fun addProductsToReceipt(product: Product, totalProductAmount: Int, bonusProductAmount: Int) {
         receipt.addPromoProduct(
             Product(product.getName(), product.getPrice(), -1, bonusProductAmount, null)
         )
@@ -42,7 +42,7 @@ class ProductRepository(
         )
     }
 
-    private fun addEventPriceIfApplicable(product: Product, bonusProductAmount: Int,get: Int?, buy: Int?) {
+    private fun addEventPriceIfApplicable(product: Product, bonusProductAmount: Int, get: Int?, buy: Int?) {
         if (get != null && buy != null) {
             val eventPrice = (bonusProductAmount / get) * (get + buy) * product.getPrice()
             receipt.addEventPrice(eventPrice)
