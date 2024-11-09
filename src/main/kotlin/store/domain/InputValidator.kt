@@ -2,7 +2,7 @@ package store.domain
 
 import store.common.Messages.*
 
-class InputValidater(
+class InputValidator(
     private val productRepository: ProductRepository
 ) {
 

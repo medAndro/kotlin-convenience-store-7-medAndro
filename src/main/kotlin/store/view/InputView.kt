@@ -3,11 +3,11 @@ package store.view
 import camp.nextstep.edu.missionutils.Console
 import store.common.Messages
 import store.common.Messages.INVALID_ERROR
-import store.domain.InputValidater
+import store.domain.InputValidator
 
 class InputView(
     private val outputView: OutputView,
-    private val inputValidater: InputValidater
+    private val inputValidator: InputValidator
 ) {
 
     private fun <T> readUntilValidInput(validator: (String) -> T): T {
@@ -25,14 +25,14 @@ class InputView(
     fun readValidItem(): Map<String, Int> {
         outputView.printMessage(Messages.INPUT_PRODUCT_NAME_QUANTITY.message())
         return readUntilValidInput { input ->
-            inputValidater.validateItems(input)
+            inputValidator.validateItems(input)
         }
     }
 
     fun readValidYN(infoMessage: String): Boolean {
         outputView.printMessage(infoMessage)
         return readUntilValidInput { input ->
-            inputValidater.validateYN(input)
+            inputValidator.validateYN(input)
         }
     }
 

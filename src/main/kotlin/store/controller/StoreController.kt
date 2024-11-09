@@ -1,7 +1,7 @@
 package store.controller
 
 import store.common.AppConfig
-import store.domain.InputValidater
+import store.domain.InputValidator
 import store.domain.InventoryService
 import store.domain.StoreService
 import store.common.Messages.*
@@ -58,8 +58,8 @@ class StoreController(
             private val outputView = OutputView()
             private val inventoryService = InventoryService()
             private val productRepository = initializeProductRepository(inventoryService)
-            private val inputValidater = InputValidater(productRepository)
-            private val inputView = InputView(outputView, inputValidater)
+            private val inputValidator = InputValidator(productRepository)
+            private val inputView = InputView(outputView, inputValidator)
             private val storeService = StoreService(inputView, productRepository)
 
             fun build() = StoreController(
