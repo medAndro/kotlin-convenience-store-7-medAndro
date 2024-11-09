@@ -25,7 +25,7 @@ class StoreController(
         val boughtProductMap = inputView.readValidItem()
         readPurchasedInfo(boughtProductMap)
         storeService.readMembershipFlag()
-        println(productRepository.getReceipt().getFullReceiptText())
+        outputView.printMessage(productRepository.getReceipt().getFullReceiptText())
         productRepository.updateReceiptStock()
     }
 
