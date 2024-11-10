@@ -73,7 +73,7 @@ class ProductRepositoryTest {
     }
 
     @Test
-    fun `test updateReceiptStock`() {
+    fun `updateReceiptStock 테스트`() {
         val cola = products["콜라"]!!
         // 영수증 5개 판매
         productRepository.addReceipt(cola, totalProductAmount = 5, bonusProductAmount = 0, get = null, buy = null)
@@ -83,11 +83,11 @@ class ProductRepositoryTest {
 
         productRepository.updateStockByReceipt()
         // 재고 업데이트 후 콜라의 수량 (20-5개)
-        assertEquals(15, cola.getQuantity() + cola.getPromoQuantity())  // 총 수량이 15로 줄어야 함
+        assertEquals(15, cola.getQuantity() + cola.getPromoQuantity())
     }
 
     @Test
-    fun `test clearReceipt`() {
+    fun `clearReceipt 테스트`() {
         val cola = products["콜라"]!!
         productRepository.addReceipt(cola, totalProductAmount = 5, bonusProductAmount = 0, get = null, buy = null)
         assertEquals(1, productRepository.getReceipt().getTotalProduct().size)
