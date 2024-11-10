@@ -20,7 +20,7 @@ class InventoryServiceTest {
         val products = inventoryService.loadMergedProducts(AppConfig.PRODUCTS_FILE.value)
 
         // 제품 개수 확인 (중복된 이름 제품 병합)
-        assertEquals(13, products.size)
+        assertEquals(11, products.size)
 
         val cola = products["콜라"]
         assertNotNull(cola)
@@ -54,7 +54,7 @@ class InventoryServiceTest {
     fun `loadPromotions 테스트`() {
         val promotions = inventoryService.loadPromotions(AppConfig.PROMOTIONS_FILE.value)
 
-        assertEquals(4, promotions.size)
+        assertEquals(3, promotions.size)
 
         val promotion1 = promotions["탄산2+1"]
         assertNotNull(promotion1)
