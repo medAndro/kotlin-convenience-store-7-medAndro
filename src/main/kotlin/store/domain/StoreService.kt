@@ -8,7 +8,7 @@ class StoreService(
     private val inputView: InputView,
     private val productRepo: ProductRepository,
 ) {
-    fun writeReceipt(buyProductName: String, buyQuantityOrigin: Int) {
+    fun appendReceiptByProductName(buyProductName: String, buyQuantityOrigin: Int) {
         val product = productRepo.getProducts()[buyProductName]
         if (product != null) processReceipt(product, buyQuantityOrigin)
     }

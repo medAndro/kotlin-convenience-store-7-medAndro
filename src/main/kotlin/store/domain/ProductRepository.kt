@@ -53,7 +53,7 @@ class ProductRepository(
         return receipt
     }
 
-    fun updateReceiptStock() {
+    fun updateStockByReceipt() {
         val totalBoughtProduct = receipt.getTotalProduct()
         totalBoughtProduct.forEach { boughtProduct ->
             products[boughtProduct.getName()]?.let { product ->

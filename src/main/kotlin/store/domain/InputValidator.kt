@@ -5,7 +5,6 @@ import store.common.Messages.*
 class InputValidator(
     private val productRepository: ProductRepository
 ) {
-
     fun validateItems(input: String): Map<String, Int> {
         require(input.isNotBlank()) { INVALID_INPUT.inputErrorMessage() }
         val splitInputText = validateSplitInputText(input)

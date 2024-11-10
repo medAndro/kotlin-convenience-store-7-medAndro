@@ -26,7 +26,7 @@ class StoreController(
         readPurchasedInfo(boughtProductMap)
         storeService.readMembershipFlag()
         outputView.printMessage(productRepository.getReceipt().getFullReceiptText())
-        productRepository.updateReceiptStock()
+        productRepository.updateStockByReceipt()
     }
 
     private fun showStock() {
@@ -39,7 +39,7 @@ class StoreController(
 
     private fun readPurchasedInfo(boughtProductMap: Map<String, Int>) {
         boughtProductMap.forEach { (key, value) ->
-            storeService.writeReceipt(key, value)
+            storeService.appendReceiptByProductName(key, value)
         }
     }
 
